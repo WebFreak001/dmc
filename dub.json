@@ -1,0 +1,9 @@
+{
+	"name": "dtomc",
+	"authors": [
+		"M4GNV5"
+	],
+	"description": "D to CommandBlock compiler",
+	"copyright": "Copyright © 2016, jakob",
+	"license": "GPL"
+}
