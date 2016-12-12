@@ -9,7 +9,7 @@ interface Operand
 	string toString(Program prog, int operandNum);
 }
 
-class Constant : Operand
+class Immediate : Operand
 {
 	int val;
 	this(int val)

@@ -22,7 +22,7 @@ class MathInstruction(alias op, alias constOp = null) : Instruction
 	}
 	this(int src, Operand dst)
 	{
-		this.src = new Constant(src);
+		this.src = new Immediate(src);
 		this.dst = dst;
 	}
 
@@ -30,10 +30,10 @@ class MathInstruction(alias op, alias constOp = null) : Instruction
 	{
 		string dstStr = dst.toString(prog, 1);
 
-		if(constOp != null && cast(Constant)src)
+		if(constOp != null && cast(Immediate)src)
 		{
 			string op;
-			int val = (cast(Constant)src).val;
+			int val = (cast(Immediate)src).val;
 
 			if(val < 0 && constOp == "add")
 			{
@@ -101,13 +101,13 @@ class Push : Instruction
 	}
 	this(int val)
 	{
-		this.val = new Constant(val);
+		this.val = new Immediate(val);
 	}
 
 	void compile(Program prog)
 	{
 		(new Mov(val, new Memory("sp"))).compile(prog);
-		(new Sub(new Constant(1), new Register("sp"))).compile(prog);
+		(new Sub(new Immediate(1), new Register("sp"))).compile(prog);
 	}
 }
 class Pop : Instruction
@@ -119,12 +119,12 @@ class Pop : Instruction
 	}
 	this(int val)
 	{
-		this.val = new Constant(val);
+		this.val = new Immediate(val);
 	}
 
 	void compile(Program prog)
 	{
-		(new Add(new Constant(1), new Register("sp"))).compile(prog);
+		(new Add(new Immediate(1), new Register("sp"))).compile(prog);
 		(new Mov(new Memory("sp"), val)).compile(prog);
 	}
 }
