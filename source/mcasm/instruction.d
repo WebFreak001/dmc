@@ -20,6 +20,11 @@ class MathInstruction(alias op, alias constOp = null) : Instruction
 		this.src = src;
 		this.dst = dst;
 	}
+	this(int src, Operand dst)
+	{
+		this.src = new Constant(src);
+		this.dst = dst;
+	}
 
 	void compile(Program prog)
 	{
@@ -94,6 +99,10 @@ class Push : Instruction
 	{
 		this.val = val;
 	}
+	this(int val)
+	{
+		this.val = new Constant(val);
+	}
 
 	void compile(Program prog)
 	{
@@ -107,6 +116,10 @@ class Pop : Instruction
 	this(Operand val)
 	{
 		this.val = val;
+	}
+	this(int val)
+	{
+		this.val = new Constant(val);
 	}
 
 	void compile(Program prog)

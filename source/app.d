@@ -8,11 +8,14 @@ void main()
 {
 	Program prog = new Program();
 	prog.label["kek"] = 0;
-	prog.addInstruction(new Push(new Constant(3)));
-	prog.addInstruction(new Mov(new Constant(3), new Register("r0")));
-	prog.addInstruction(new Sub(new Constant(-5), new Register("r0")));
-	prog.addInstruction(new Mul(new Constant(12), new Register("r0")));
-	prog.addInstruction(new Mov(new Register("r0"), new Memory("sp")));
+
+	Register r0 = new Register("r0");
+
+	prog.addInstruction(new Push(42));
+	prog.addInstruction(new Mov(3, r0));
+	prog.addInstruction(new Sub(-5, r0));
+	prog.addInstruction(new Mul(12, r0));
+	prog.addInstruction(new Mov(r0, new Memory("sp", null, 16)));
 	prog.addInstruction(new Start("kek"));
 
 	prog.compile();
