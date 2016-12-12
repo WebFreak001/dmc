@@ -9,7 +9,7 @@ interface Instruction
 	void compile(Program prog);
 }
 
-mixin template MathInstruction(alias op)
+class MathInstruction(alias op) : Instruction
 {
 	Operand src;
 	Operand dst;
@@ -27,42 +27,15 @@ mixin template MathInstruction(alias op)
 		prog.addCommand("scoreboard players operation " ~ dstStr ~ " val " ~ op ~ " " ~ srcStr ~ " val");
 	}
 }
-class Mov : Instruction
-{
-	mixin MathInstruction!"=";
-}
-class Swp : Instruction
-{
-	mixin MathInstruction!"><";
-}
-class Min : Instruction
-{
-	mixin MathInstruction!"<";
-}
-class Max : Instruction
-{
-	mixin MathInstruction!">";
-}
-class Add : Instruction
-{
-	mixin MathInstruction!"+=";
-}
-class Sub : Instruction
-{
-	mixin MathInstruction!"-=";
-}
-class Mul : Instruction
-{
-	mixin MathInstruction!"*=";
-}
-class Div : Instruction
-{
-	mixin MathInstruction!"/=";
-}
-class Mod : Instruction
-{
-	mixin MathInstruction!"%=";
-}
+alias Mov = MathInstruction!"=";
+alias Swp = MathInstruction!"><";
+alias Min = MathInstruction!"<";
+alias Max = MathInstruction!">";
+alias Add = MathInstruction!"+=";
+alias Sub = MathInstruction!"-=";
+alias Mul = MathInstruction!"*=";
+alias Div = MathInstruction!"/=";
+alias Mod = MathInstruction!"%=";
 
 class Start : Instruction
 {
