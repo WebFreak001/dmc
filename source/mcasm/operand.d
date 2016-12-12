@@ -19,7 +19,8 @@ class Constant : Operand
 
 	string toString(Program prog, int opNum)
 	{
-		return val.to!string;
+		prog.addConstant(val);
+		return "const" ~ val.to!string;
 	}
 }
 

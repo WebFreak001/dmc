@@ -1,6 +1,6 @@
 module mcasm.main;
 
-import std.container : SList;
+import std.conv;
 import mcasm.annotation;
 import mcasm.instruction;
 
@@ -33,6 +33,7 @@ class Program
 	Instruction[] instructions;
 	Command[] commands;
 	int[string] label;
+	int[] constants;
 
 	void addCommand(string cmd, bool conditional = false)
 	{
@@ -49,9 +50,20 @@ class Program
 		instructions ~= ins; //TODO directly compile here?
 	}
 
+	void addConstant(int val)
+	{
+		constants ~= val;
+	}
+
 	void compile()
 	{
 		foreach(ins; instructions)
 			ins.compile(this);
+
+		Command[] initConsts = new Command[constants.length];
+		foreach(i, val; constants)
+			initConsts[i] = new Command("scoreboard players set const" ~ val.to!string ~ " val " ~ val.to!string);
+
+		commands = initConsts ~ commands;
 	}
 }

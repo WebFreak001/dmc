@@ -10,6 +10,8 @@ void main()
 	prog.label["kek"] = 0;
 	prog.addInstruction(new Push(new Constant(3)));
 	prog.addInstruction(new Mov(new Constant(3), new Register("r0")));
+	prog.addInstruction(new Sub(new Constant(-5), new Register("r0")));
+	prog.addInstruction(new Mul(new Constant(12), new Register("r0")));
 	prog.addInstruction(new Mov(new Register("r0"), new Memory("sp")));
 	prog.addInstruction(new Start("kek"));
 
