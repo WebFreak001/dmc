@@ -5,7 +5,7 @@ import mcasm.main;
 
 interface Annotation
 {
-	string toString(Program prog, int self);
+	string finalize(Program prog, int self);
 }
 
 class Label : Annotation
@@ -16,7 +16,7 @@ class Label : Annotation
 		this.label = label;
 	}
 
-	string toString(Program prog, int self)
+	string finalize(Program prog, int self)
 	{
 		int pos = prog.label[this.label];
 		with(prog.commands[pos])
@@ -34,7 +34,7 @@ class Position : Annotation
 		this.pos = pos;
 	}
 
-	string toString(Program prog, int self)
+	string finalize(Program prog, int self)
 	{
 		with(prog.commands[this.pos])
 		{

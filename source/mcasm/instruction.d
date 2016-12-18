@@ -5,9 +5,17 @@ import mcasm.main;
 import mcasm.operand;
 import mcasm.annotation;
 
-interface Instruction
+abstract class Instruction
 {
-	void compile(Program prog);
+	abstract void compile(Program prog);
+
+	void compile(Program prog, Annotation conditionalTo)
+	{
+		if(conditionalTo)
+			throw new Exception("Instruction " ~ this.stringof ~ " cannot be conditional");
+		else
+			this.compile(prog);
+	}
 }
 
 class MathInstruction(alias op, alias constOp = null) : Instruction
@@ -26,7 +34,7 @@ class MathInstruction(alias op, alias constOp = null) : Instruction
 		this.dst = dst;
 	}
 
-	void compile(Program prog)
+	override void compile(Program prog)
 	{
 		string dstStr = dst.toString(prog, 1);
 
@@ -77,7 +85,7 @@ class Start : Instruction
 		this.label = label;
 	}
 
-	void compile(Program prog)
+	override void compile(Program prog)
 	{
 		Command cmd = new Command("blockdata %s {auto:true}");
 		cmd.annotations = [new Label(label)];
@@ -86,7 +94,7 @@ class Start : Instruction
 }
 class End : Instruction
 {
-	void compile(Program prog)
+	override void compile(Program prog)
 	{
 		prog.addCommand(cast(Command)null); //places a stone
 	}
@@ -104,7 +112,7 @@ class Push : Instruction
 		this.val = new Immediate(val);
 	}
 
-	void compile(Program prog)
+	override void compile(Program prog)
 	{
 		(new Mov(val, new Memory("sp"))).compile(prog);
 		(new Sub(new Immediate(1), new Register("sp"))).compile(prog);
@@ -122,7 +130,7 @@ class Pop : Instruction
 		this.val = new Immediate(val);
 	}
 
-	void compile(Program prog)
+	override void compile(Program prog)
 	{
 		(new Add(new Immediate(1), new Register("sp"))).compile(prog);
 		(new Mov(new Memory("sp"), val)).compile(prog);

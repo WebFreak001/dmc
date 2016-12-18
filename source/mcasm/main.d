@@ -1,6 +1,7 @@
 module mcasm.main;
 
 import std.conv;
+import std.string;
 import mcasm.annotation;
 import mcasm.instruction;
 
@@ -15,16 +16,27 @@ enum BlockDirection
 class Command
 {
 	string cmd;
-	bool conditional;
+	Annotation conditionalTo;
 	Annotation[] annotations;
 
 	int x, y, z;
 	BlockDirection direction;
 
-	this(string cmd, bool conditional = false)
+	this(string cmd, Annotation conditionalTo = null)
 	{
 		this.cmd = cmd;
-		this.conditional = conditional;
+		this.conditionalTo = conditionalTo;
+	}
+
+	void finalize(Program prog, int self)
+	{
+		foreach(i, anno; annotations)
+		{
+			string insertion = anno.finalize(prog, self);
+			long idx = cmd.indexOf("%s");
+
+			cmd = cmd[0 .. idx] ~ insertion ~ cmd[idx + 2 .. $];
+		}
 	}
 }
 
@@ -35,9 +47,9 @@ class Program
 	int[string] label;
 	int[] constants;
 
-	void addCommand(string cmd, bool conditional = false)
+	void addCommand(string cmd, Annotation conditionalTo = null)
 	{
-		commands ~= new Command(cmd, conditional);
+		commands ~= new Command(cmd, conditionalTo);
 	}
 
 	void addCommand(Command cmd)
@@ -59,6 +71,9 @@ class Program
 	{
 		foreach(ins; instructions)
 			ins.compile(this);
+
+		foreach(i, cmd; commands)
+			cmd.finalize(this, cast(int)i);
 
 		Command[] initConsts = new Command[constants.length];
 		foreach(i, val; constants)
