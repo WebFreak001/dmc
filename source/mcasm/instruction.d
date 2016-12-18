@@ -99,6 +99,20 @@ class End : Instruction
 		prog.addCommand(cast(Command)null); //places a stone
 	}
 }
+class Jump : Instruction
+{
+	string label;
+	this(string label)
+	{
+		this.label = label;
+	}
+
+	override void compile(Program prog)
+	{
+		(new Start(label)).compile(prog);
+		(new End()).compile(prog);
+	}
+}
 
 class Push : Instruction
 {
